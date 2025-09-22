@@ -3,24 +3,45 @@ import joblib
 import pandas as pd
 from feature_extractor import feature_extractor
 
-# Load trained model
-model = joblib.load("tuned_xgboost_model.pkl")
+# Load model
+@st.cache_resource
+def load_model():
+    return joblib.load("tuned_xgboost_model.pkl")
 
-st.title("🔒 Phishing URL Detector")
+model = load_model()
 
-# Input box
+# Define label mapping (adjust if your dataset used opposite encoding)
+label_map = {
+    0: "Phishing",
+    1: "Legitimate"
+}
+
+st.title("🔍 Phishing URL Detection")
+
 url = st.text_input("Enter a URL to check:")
 
-if st.button("Predict"):
-    if url:
-        # Extract features
-        df= feature_extractor(url)   # must return a dict with all 94 features
-        prediction = model.predict(df)[0]
-        probability = model.predict_proba(df)[0][1]
+if st.button("Check URL"):
+    if url.strip():
+        try:
+            # Extract 94 features → DataFrame
+            df = feature_extractor(url)
 
-        if prediction == 1:
-            st.error(f"🚨 Phishing (Probability: {probability:.2f})")
-        else:
-            st.success(f"✅ Legitimate (Probability: {1-probability:.2f})")
+            # Predict class
+            prediction = model.predict(df)[0]
+
+            # Get probability for predicted class
+            proba = model.predict_proba(df)[0]
+            class_index = list(model.classes_).index(prediction)
+            probability = proba[class_index]
+
+            # Map numeric label → readable
+            prediction_label = label_map.get(prediction, str(prediction))
+
+            # Show results
+            st.success(f"Prediction: **{prediction_label}**")
+            st.info(f"Confidence: {probability:.2%}")
+
+        except Exception as e:
+            st.error(f"Error: {e}")
     else:
-        st.warning("Please enter a URL")
+        st.warning("Please enter a valid URL.")
