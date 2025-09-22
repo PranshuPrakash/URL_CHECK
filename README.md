@@ -3,7 +3,7 @@
 A machine learning project that detects **phishing URLs** based only on URL-based lexical features (94 features).
 The project includes:
 
-* A **trained ML model** (`model.pkl`)
+* A **trained ML model** (`tuned_xgboost_model.pkl`)
 * A **feature extractor** (`feature_extractor.py`)
 * A **Streamlit frontend** (`app.py`) for easy web-based testing
 * A **Flask backend** option for API deployment
