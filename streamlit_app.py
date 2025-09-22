@@ -15,7 +15,6 @@ if st.button("Predict"):
     if url:
         # Extract features
         features = feature_extractor(url)   # must return a dict with all 94 features
-        df = pd.DataFrame([features])      # convert dict → DataFrame
         prediction = model.predict(df)[0]
         probability = model.predict_proba(df)[0][1]
 
