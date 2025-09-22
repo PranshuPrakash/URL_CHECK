@@ -1,7 +1,7 @@
 import streamlit as st
 import joblib
 import pandas as pd
-from feature_extractor import extract_features
+from feature_extractor import feature_extractor
 
 # Load trained model
 model = joblib.load("tuned_xgboost_model.pkl")
