@@ -14,7 +14,7 @@ url = st.text_input("Enter a URL to check:")
 if st.button("Predict"):
     if url:
         # Extract features
-        features = feature_extractor(url)   # must return a dict with all 94 features
+        df= feature_extractor(url)   # must return a dict with all 94 features
         prediction = model.predict(df)[0]
         probability = model.predict_proba(df)[0][1]
 
